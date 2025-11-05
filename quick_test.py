@@ -21,15 +21,15 @@ try:
     data = response.json()
     
     if 'c' in data and data['c'] is not None:
-        print("✅ PASS: API is working")
+        print("[PASS] API is working")
         print(f"   AAPL Current Price: ${data['c']}")
         print(f"   High: ${data.get('h', 'N/A')}")
         print(f"   Low: ${data.get('l', 'N/A')}")
     else:
-        print("❌ FAIL: API returned no data")
+        print("[FAIL] API returned no data")
         sys.exit(1)
 except requests.exceptions.RequestException as e:
-    print(f"❌ FAIL: API connection error: {e}")
+    print(f"[FAIL] API connection error: {e}")
     sys.exit(1)
 
 # Test 2: Check required packages
@@ -40,21 +40,21 @@ missing_packages = []
 for package in required_packages:
     try:
         __import__(package)
-        print(f"✅ {package} is installed")
+        print(f"[OK] {package} is installed")
     except ImportError:
-        print(f"❌ {package} is NOT installed")
+        print(f"[MISSING] {package} is NOT installed")
         missing_packages.append(package)
 
 if missing_packages:
-    print(f"\n⚠️  Missing packages: {', '.join(missing_packages)}")
+    print(f"\nMissing packages: {', '.join(missing_packages)}")
     print(f"Install with: pip install {' '.join(missing_packages)}")
 else:
-    print("✅ PASS: All required packages installed")
+    print("[PASS] All required packages installed")
 
 # Test 3: Check model directory
 print("\n[TEST 3] Checking model directory...")
 if os.path.exists('models'):
-    print("✅ models/ directory exists")
+    print("[OK] models/ directory exists")
     
     # Check for models
     model_files = []
@@ -64,17 +64,17 @@ if os.path.exists('models'):
                 model_files.append(os.path.join(root, file))
     
     if model_files:
-        print(f"✅ Found {len(model_files)} model file(s):")
+        print(f"[OK] Found {len(model_files)} model file(s):")
         for model_file in model_files:
             print(f"   - {model_file}")
     else:
-        print("⚠️  No model files found (.pkl or .h5)")
+        print("[INFO] No model files found (.pkl or .h5)")
         print("   You can create a test model or place your trained model here")
 else:
-    print("❌ models/ directory not found")
+    print("[INFO] models/ directory not found")
     print("   Creating models/ directory...")
     os.makedirs('models', exist_ok=True)
-    print("✅ Created models/ directory")
+    print("[OK] Created models/ directory")
 
 # Test 4: Try loading a model (if exists)
 print("\n[TEST 4] Testing model loading...")
@@ -87,11 +87,11 @@ try:
         try:
             with open(model_path, 'rb') as f:
                 model = pickle.load(f)
-            print(f"✅ Successfully loaded model from {model_path}")
+            print(f"[PASS] Successfully loaded model from {model_path}")
         except Exception as e:
-            print(f"❌ Error loading model: {e}")
+            print(f"[FAIL] Error loading model: {e}")
     else:
-        print(f"⚠️  No model at {model_path}")
+        print(f"[INFO] No model at {model_path}")
         print("   Creating a test model for demonstration...")
         
         try:
@@ -110,20 +110,20 @@ try:
             with open(model_path, 'wb') as f:
                 pickle.dump(model, f)
             
-            print(f"✅ Created test model at {model_path}")
+            print(f"[PASS] Created test model at {model_path}")
         except Exception as e:
-            print(f"⚠️  Could not create test model: {e}")
+            print(f"[INFO] Could not create test model: {e}")
             print("   You can still run the agent with fallback mode")
 
 except ImportError as e:
-    print(f"⚠️  Could not test model loading: {e}")
+    print(f"[INFO] Could not test model loading: {e}")
 
 # Test 5: Check if realtime_agent.py exists
 print("\n[TEST 5] Checking realtime_agent.py...")
 if os.path.exists('realtime_agent.py'):
-    print("✅ realtime_agent.py exists")
+    print("[OK] realtime_agent.py exists")
 else:
-    print("❌ realtime_agent.py not found")
+    print("[FAIL] realtime_agent.py not found")
 
 # Summary
 print("\n" + "=" * 70)
@@ -131,11 +131,11 @@ print("TEST SUMMARY")
 print("=" * 70)
 
 if not missing_packages:
-    print("✅ All tests passed!")
+    print("[PASS] All tests passed!")
     print("\nYou can now run:")
     print("  python realtime_agent.py")
 else:
-    print("⚠️  Some issues found. Please fix them before running the agent.")
+    print("[WARNING] Some issues found. Please fix them before running the agent.")
     print("\nTo install missing packages:")
     print(f"  pip install {' '.join(missing_packages)}")
 
